@@ -8,8 +8,8 @@ import {
 import { Opaque } from '@glimmer/util';
 import {
   get,
-  objectAt,
   isProxy,
+  objectAt,
   tagFor,
   tagForProperty
 } from 'ember-metal';

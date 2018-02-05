@@ -10,6 +10,7 @@ import { DESCRIPTOR_TRAP, EMBER_METAL_ES5_GETTERS, MANDATORY_SETTER } from 'embe
 import {
   removeChainWatcher
 } from './chains';
+import EachProxy from './each_proxy';
 import { ENV } from 'ember-environment';
 
 let counters;
@@ -62,6 +63,7 @@ export class Meta {
     this._chains = undefined;
     this._tag = undefined;
     this._tags = undefined;
+    this._eachProxy = undefined;
 
     // initial value for all flags right now is false
     // see FLAGS const for detailed list of flags used
@@ -406,6 +408,26 @@ export class Meta {
 
   deleteFromValues(subkey) {
     delete this._getOrCreateOwnMap('_values')[subkey];
+  }
+
+  get eachProxy() {
+    if (this._eachProxy === undefined) {
+      this._eachProxy = new EachProxy(this.source);
+    }
+
+    return this._eachProxy;
+  }
+
+  arrayWillChange(array, startIdx, removeAmt, addAmt) {
+    if (this._eachProxy !== undefined) {
+      this._eachProxy.arrayWillChange(array, startIdx, removeAmt, addAmt);
+    }
+  }
+
+  arrayDidChange(array, startIdx, removeAmt, addAmt) {
+    if (this._eachProxy !== undefined) {
+      this._eachProxy.arrayDidChange(array, startIdx, removeAmt, addAmt);
+    }
   }
 }
 

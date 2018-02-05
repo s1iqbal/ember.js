@@ -326,7 +326,9 @@ function lazyGet(obj, key) {
   }
 
   // Use `get` if the return value is an EachProxy or an uncacheable value.
-  if (isVolatile(obj, key, meta)) {
+  if (key === '@each') {
+    return meta.eachProxy;
+  } else if (isVolatile(obj, key, meta)) {
     return get(obj, key);
   // Otherwise attempt to get the cached value of the computed property
   } else {
